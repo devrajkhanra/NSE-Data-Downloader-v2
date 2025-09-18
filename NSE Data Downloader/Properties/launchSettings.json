@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NSE Data Downloader (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "NSE Data Downloader (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
