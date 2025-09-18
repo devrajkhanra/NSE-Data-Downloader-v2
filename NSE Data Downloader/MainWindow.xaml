@@ -14,14 +14,14 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Window.Resources>
-        <converters:FailedToVisibilityConverter x:Key="FailedToVisibilityConverter"/>
-        <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <converters:InvertBoolToVisibilityConverter x:Key="InvertBoolToVisibilityConverter"/>
-    </Window.Resources>
-
     <Grid Margin="20">
+        <Grid.Resources>
+            <converters:FailedToVisibilityConverter x:Key="FailedToVisibilityConverter"/>
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:InvertBoolToVisibilityConverter x:Key="InvertBoolToVisibilityConverter"/>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -312,17 +312,14 @@
                        Visibility="{Binding HasDownloads, Converter={StaticResource BoolToVisibilityConverter}}"
                        Padding="16,8"/>
 
-                <Button Content="Start Download" 
-                       Command="{Binding StartDownloadCommand}"
+                <Button Command="{Binding StartDownloadCommand}"
                        IsEnabled="{Binding CanStartDownload}"
                        Style="{ThemeResource AccentButtonStyle}"
                        Padding="20,10">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon Glyph="&#xE896;" FontSize="16"/>
-                            <TextBlock Text="Start Download"/>
-                        </StackPanel>
-                    </Button.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE896;" FontSize="16"/>
+                        <TextBlock Text="Start Download"/>
+                    </StackPanel>
                 </Button>
             </StackPanel>
         </Grid>

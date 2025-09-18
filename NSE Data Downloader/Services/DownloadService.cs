@@ -1,4 +1,4 @@
-﻿using NSE_Data_Downloader.Models;
+using NSE_Data_Downloader.Models;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -116,10 +116,9 @@ namespace NSE_Data_Downloader.Services
                 // Clean up partial file
                 try
                 {
-                    string? itemFilePath = item.FilePath;
-                    if (!string.IsNullOrEmpty(itemFilePath) && File.Exists(itemFilePath))
+                    if (!string.IsNullOrEmpty(item.FilePath) && File.Exists(item.FilePath))
                     {
-                        File.Delete(itemFilePath);
+                        File.Delete(item.FilePath);
                     }
                 }
                 catch

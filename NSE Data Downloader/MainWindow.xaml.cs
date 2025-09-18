@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 using NSE_Data_Downloader.Models;
 using NSE_Data_Downloader.ViewModels;
 using System;
-using System.ComponentModel;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
@@ -17,6 +16,7 @@ namespace NSE_Data_Downloader
         {
             this.InitializeComponent();
             ViewModel = new MainViewModel();
+            this.DataContext = ViewModel;
 
             // Set minimum window size for better UX
             this.AppWindow.Resize(new Windows.Graphics.SizeInt32(1000, 700));
@@ -41,7 +41,7 @@ namespace NSE_Data_Downloader
                     ViewModel.DownloadFolder = folder.Path;
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 // Handle picker errors gracefully
                 System.Diagnostics.Debug.WriteLine($"Folder picker error: {ex.Message}");
@@ -67,5 +67,4 @@ namespace NSE_Data_Downloader
             }
         }
     }
-}
 }

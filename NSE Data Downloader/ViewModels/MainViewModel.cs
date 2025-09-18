@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NSE_Data_Downloader.Models;
 using NSE_Data_Downloader.Services;
@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,93 +15,28 @@ namespace NSE_Data_Downloader.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
+        [ObservableProperty]
         private DateTime _startDate = DateTime.Today.AddDays(-7);
+        
+        [ObservableProperty]
         private DateTime _endDate = DateTime.Today;
+        
+        [ObservableProperty]
         private string _downloadFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
             "NSE-Data");
+        
+        [ObservableProperty]
         private bool _downloadStock = true;
+        
+        [ObservableProperty]
         private bool _downloadIndices = true;
+        
+        [ObservableProperty]
         private bool _downloadBroad = false;
+        
+        [ObservableProperty]
         private bool _isDownloading = false;
-
-        public DateTime StartDate
-        {
-            get => _startDate;
-            set
-            {
-                if (SetProperty(ref _startDate, value))
-                {
-                    OnPropertyChanged(nameof(CanStartDownload));
-                }
-            }
-        }
-
-        public DateTime EndDate
-        {
-            get => _endDate;
-            set
-            {
-                if (SetProperty(ref _endDate, value))
-                {
-                    OnPropertyChanged(nameof(CanStartDownload));
-                }
-            }
-        }
-
-        public string DownloadFolder
-        {
-            get => _downloadFolder;
-            set => SetProperty(ref _downloadFolder, value);
-        }
-
-        public bool DownloadStock
-        {
-            get => _downloadStock;
-            set
-            {
-                if (SetProperty(ref _downloadStock, value))
-                {
-                    OnPropertyChanged(nameof(CanStartDownload));
-                }
-            }
-        }
-
-        public bool DownloadIndices
-        {
-            get => _downloadIndices;
-            set
-            {
-                if (SetProperty(ref _downloadIndices, value))
-                {
-                    OnPropertyChanged(nameof(CanStartDownload));
-                }
-            }
-        }
-
-        public bool DownloadBroad
-        {
-            get => _downloadBroad;
-            set
-            {
-                if (SetProperty(ref _downloadBroad, value))
-                {
-                    OnPropertyChanged(nameof(CanStartDownload));
-                }
-            }
-        }
-
-        public bool IsDownloading
-        {
-            get => _isDownloading;
-            set
-            {
-                if (SetProperty(ref _isDownloading, value))
-                {
-                    OnPropertyChanged(nameof(CanStartDownload));
-                }
-            }
-        }
 
         public ObservableCollection<DownloadItem> Downloads { get; } = new ObservableCollection<DownloadItem>();
 
@@ -158,7 +92,7 @@ namespace NSE_Data_Downloader.ViewModels
         partial void OnIsDownloadingChanged(bool value) => OnPropertyChanged(nameof(CanStartDownload));
 
         [RelayCommand]
-        private async Task StartDownloadsAsync()
+        private async Task StartDownloadAsync()
         {
             if (IsDownloading) return;
 
@@ -325,6 +259,36 @@ namespace NSE_Data_Downloader.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine($"Failed to save history: {ex.Message}");
             }
+        }
+
+        partial void OnStartDateChanged(DateTime value)
+        {
+            OnPropertyChanged(nameof(CanStartDownload));
+        }
+
+        partial void OnEndDateChanged(DateTime value)
+        {
+            OnPropertyChanged(nameof(CanStartDownload));
+        }
+
+        partial void OnDownloadStockChanged(bool value)
+        {
+            OnPropertyChanged(nameof(CanStartDownload));
+        }
+
+        partial void OnDownloadIndicesChanged(bool value)
+        {
+            OnPropertyChanged(nameof(CanStartDownload));
+        }
+
+        partial void OnDownloadBroadChanged(bool value)
+        {
+            OnPropertyChanged(nameof(CanStartDownload));
+        }
+
+        partial void OnIsDownloadingChanged(bool value)
+        {
+            OnPropertyChanged(nameof(CanStartDownload));
         }
     }
 }
