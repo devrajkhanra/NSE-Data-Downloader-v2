@@ -16,7 +16,9 @@ namespace NSE_Data_Downloader
         {
             this.InitializeComponent();
             ViewModel = new MainViewModel();
-            this.DataContext = ViewModel;
+            
+            // Set the DataContext for data binding
+            ((FrameworkElement)this.Content).DataContext = ViewModel;
 
             // Set minimum window size for better UX
             this.AppWindow.Resize(new Windows.Graphics.SizeInt32(1000, 700));

@@ -24,7 +24,7 @@ namespace NSE_Data_Downloader.Services
 
         public async Task DownloadAsync(DownloadItem item, CancellationToken cancellationToken = default)
         {
-            if (_disposed) throw new ObjectDisposedException(nameof(DownloaderService));
+            ObjectDisposedException.ThrowIfDisposed(_disposed, this);
 
             try
             {
