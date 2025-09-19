@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
-using Windows.ApplicationModel;
+using NSE_Data_Downloader.Services;
+using NSE_Data_Downloader.ViewModels;
+using System;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,25 +15,55 @@ namespace NSE_Data_Downloader
     /// </summary>
     public partial class App : Application
     {
-        private Window? _window;
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+        private Window _mainWindow;
+        public IServiceProvider Services { get; }
+
         public App()
         {
             InitializeComponent();
+            Services = ConfigureServices();
         }
 
-        /// <summary>
-        /// Invoked when the application is launched.
-        /// </summary>
-        /// <param name="args">Details about the launch request and process.</param>
+        private IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton<FolderSetupService>();
+            services.AddTransient<MainViewModel>();
+            return services.BuildServiceProvider();
+        }
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            _window = new MainWindow();
-            _window.Activate();
+            _mainWindow = new MainWindow();
+
+            _mainWindow.Activate();
+
+            // Subscribe to Loaded event on the content to wait for XamlRoot readiness
+            if (_mainWindow.Content is FrameworkElement content)
+            {
+                content.Loaded += MainWindowContent_Loaded;
+            }
         }
+
+        private async void MainWindowContent_Loaded(object sender, RoutedEventArgs e)
+        {
+            var content = sender as FrameworkElement;
+
+            // Detach handler after loading
+            content.Loaded -= MainWindowContent_Loaded;
+
+            var xamlRoot = content.XamlRoot;
+
+            var folderSetupService = new FolderSetupService(_mainWindow);
+            folderSetupService.SetXamlRoot(xamlRoot);
+
+            var mainViewModel = new MainViewModel(folderSetupService);
+
+            (_mainWindow as MainWindow).RootGridPublic.DataContext = mainViewModel;
+
+            // Initialize folders here safely after XamlRoot ready
+            await mainViewModel.InitializeAsync(); // Make sure you have this method async in VM
+        }
+
     }
 }
